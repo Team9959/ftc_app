@@ -24,6 +24,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 //@Disabled
 public class MecanumCode extends OpMode {
 
+    
     //Declare and initialize variables and motors
     DcMotor TapeMeasure;
     DcMotor FrontLeft;
@@ -65,18 +66,34 @@ public class MecanumCode extends OpMode {
         float leftY = gamepad1.left_stick_y;
         float rightY = gamepad1.right_stick_y;
         float right2Y = gamepad2.right_stick_y;
+        float leftX = gamepad1.left_stick_x;
         double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
         double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
+        double robotX = Math.atan2(0,gamepad1.right_trigger) - Math.PI / 4;
         double rightX = gamepad1.right_stick_x;
+
         final double v1 = r * Math.cos(robotAngle) + rightX;
         final double v2 = r * Math.sin(robotAngle) - rightX;
         final double v3 = r * Math.sin(robotAngle) + rightX;
         final double v4 = r * Math.cos(robotAngle) - rightX;
+        final double v1a = r * Math.cos(robotX);
+        final double v2a = r * Math.sin(robotX);
+        final double v3a = r * Math.sin(robotX);
+        final double v4a = r * Math.cos(robotX);
 
-        FrontLeft.setPower(v1);
-        FrontRight.setPower(v2);
-        BackLeft.setPower(v3);
-        BackRight.setPower(v4);
+        if (leftY <= .05 && leftY >= -.05 && leftX >= -.05 && leftX <= .05) {
+            FrontLeft.setPower(v1a);
+            FrontRight.setPower(v2a);
+            BackLeft.setPower(v3a);
+            BackRight.setPower(v4a);
+        }
+        else {
+            FrontLeft.setPower(v1);
+            FrontRight.setPower(v2);
+            BackLeft.setPower(v3);
+            BackRight.setPower(v4);
+        }
+
 
         //Driving
         //Gamepad 1 controls driving, Gamepad 2 controls the tape measure
